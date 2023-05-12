@@ -1,15 +1,33 @@
 package storage
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
 
-func (a *adapter) AddChart(name string) error {
-	fmt.Println("Entering AddChart with name: ", name)
+	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
+)
 
-	a.chartList = append(a.chartList, name)
+func (a *adapter) AddChart(chart *serviceModels.HelmChart) error {
+	fmt.Println("Entering AddChart with name: ", chart.Name)
 
-	fmt.Println("Chart added: ", name)
+	a.chartList = append(a.chartList, chart)
 
-	fmt.Printf("a.chartList: %v\n", a.chartList)
+	fmt.Println("Chart added: ", chart.Name)
+
+	prettyChartList, err := PrettyStruct(a.chartList)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Chart list: %v\n", prettyChartList)
 
 	return nil
+}
+
+func PrettyStruct(data interface{}) (string, error) {
+	val, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(val), nil
 }
