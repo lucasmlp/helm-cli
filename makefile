@@ -1,13 +1,16 @@
 GOPATH=$(shell go env GOPATH)
 
-cli-local:
-	@ echo
+add-local:
 	@ rm -rf main
 	@ go build ./cmd/main.go
 	@ ./main add k8s-api
 
-cli-web:
-	@ echo
+add-web:
 	@ rm -rf main
 	@ go build ./cmd/main.go
 	@ ./main add ark
+
+index:
+	@ rm -rf main
+	@ go build ./cmd/main.go
+	@ ./main index

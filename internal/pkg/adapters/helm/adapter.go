@@ -2,8 +2,11 @@ package helm
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"os"
 
+	"github.com/lucasmlp/helm-cli/internal/pkg/adapters/storage"
 	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/cli"
@@ -12,16 +15,21 @@ import (
 )
 
 type adapter struct {
+	storageAdapter storage.Adapter
 }
 
 type Adapter interface {
 	LocateChartInWebRepository(name, url string) (*serviceModels.HelmChart, error)
 	LocateChartInLocalRepository(name string, path string) (*serviceModels.HelmChart, error)
+	GenerateIndexFile(path string) error
 }
 
-func NewAdapter() Adapter {
-
-	return &adapter{}
+func NewAdapter(
+	storageAdapter storage.Adapter,
+) Adapter {
+	return &adapter{
+		storageAdapter: storageAdapter,
+	}
 }
 
 func (a *adapter) LocateChartInWebRepository(name, url string) (*serviceModels.HelmChart, error) {
@@ -88,6 +96,14 @@ func (a *adapter) LocateChartInLocalRepository(name string, path string) (*servi
 
 		fmt.Printf("chartVersion.URLs[0]: %v\n", chartVersion.URLs[0])
 
+		chartCompletePath := path + "/" + name + "-" + chartVersion.Version + ".tgz"
+
+		err = a.retrieveLocalChart(chartVersion.Name, chartVersion.Version, chartCompletePath)
+		if err != nil {
+			log.Fatalln(err)
+			return nil, err
+		}
+
 		chartData := &serviceModels.HelmChart{
 			Name:        chartVersion.Name,
 			Version:     chartVersion.Version,
@@ -123,8 +139,6 @@ func (a *adapter) retrieveChart(name, url string, indexFile *repo.IndexFile, set
 	pullClient := action.NewPullWithOpts(action.WithConfig(actionConfiguration))
 	pullClient.Settings = settings
 	pullClient.DestDir = "./charts"
-	pullClient.Untar = true
-	pullClient.UntarDir = "./charts"
 	pullClient.RepoURL = url
 	pullClient.Version = chartVersion.Version
 
@@ -143,4 +157,44 @@ func (a *adapter) retrieveChart(name, url string, indexFile *repo.IndexFile, set
 	}
 
 	return chartData, nil
+}
+
+func (a *adapter) retrieveLocalChart(name, version, path string) error {
+	source, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer source.Close()
+
+	destination, err := os.Create("./charts" + "/" + name + "-" + version + ".tgz")
+	if err != nil {
+		return err
+	}
+	defer destination.Close()
+
+	_, err = io.Copy(destination, source)
+	if err != nil {
+		return err
+	}
+
+	err = destination.Sync()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *adapter) GenerateIndexFile(path string) error {
+	index, err := repo.IndexDirectory(path, "")
+	if err != nil {
+		return err
+	}
+
+	index.SortEntries()
+
+	err = index.WriteFile(path+"/index.yaml", 0644)
+	if err != nil {
+		return err
+	}
+	return nil
 }

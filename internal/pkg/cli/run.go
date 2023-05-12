@@ -15,11 +15,18 @@ func (c cli) Run() {
 		Run:   c.addHelmChart,
 	}
 
+	var indexCmd = &cobra.Command{
+		Use:   "index",
+		Short: "Add a Helm repository index",
+		Run:   c.addIndex,
+	}
+
 	var rootCmd = &cobra.Command{
 		Use:   "cli-app",
 		Short: "A CLI application to manage Helm charts",
 	}
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(indexCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)

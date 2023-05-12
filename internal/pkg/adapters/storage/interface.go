@@ -6,4 +6,5 @@ type Adapter interface {
 	AddRepository(repository serviceModels.HelmRepository) error
 	AddChart(chart *serviceModels.HelmChart) error
 	GetRepositoryList() []serviceModels.HelmRepository
+	GetChartList() []*serviceModels.HelmChart
 }

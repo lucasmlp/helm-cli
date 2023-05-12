@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	helmAdapter "github.com/lucasmlp/helm-cli/internal/pkg/adapters/helm"
 	"github.com/lucasmlp/helm-cli/internal/pkg/adapters/storage"
 	"github.com/lucasmlp/helm-cli/internal/pkg/cli"
@@ -19,9 +21,16 @@ var helmLocalRepository = serviceModels.HelmRepository{
 }
 
 func main() {
+	err := os.Mkdir("charts", 0755)
+	if err != nil {
+		if !os.IsExist(err) {
+			panic(err)
+		}
+	}
+
 	storageAdapter := storage.NewAdapter()
 
-	helmAdapter := helmAdapter.NewAdapter()
+	helmAdapter := helmAdapter.NewAdapter(storageAdapter)
 
 	repositoryList := []serviceModels.HelmRepository{helmWebRepository, helmLocalRepository}
 
