@@ -2,7 +2,7 @@ package helm
 
 import "fmt"
 
-func (s service) AddChart(name string) error {
+func (s *service) AddChart(name string) error {
 	fmt.Println("Entering AddChart with name: ", name)
 	for _, repo := range s.repositoryList {
 		//pull repo index and search for chart with name = name

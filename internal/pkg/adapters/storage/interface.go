@@ -1,6 +1,5 @@
-package helm
+package storage
 
 type Adapter interface {
-	AddChart(name, repository string) error
 	AddRepository(location string) error
 }
