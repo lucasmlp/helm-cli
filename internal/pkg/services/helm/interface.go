@@ -6,4 +6,5 @@ type Service interface {
 	AddChart(name string) error
 	AddRepository(repository models.HelmRepository) error
 	AddIndex() error
+	ListContainerImages() (*[]string, error)
 }

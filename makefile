@@ -14,3 +14,8 @@ index:
 	@ rm -rf main
 	@ go build ./cmd/main.go
 	@ ./main index
+
+images:
+	@ rm -rf main
+	@ go build ./cmd/main.go
+	@ ./main images

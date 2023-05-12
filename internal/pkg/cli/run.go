@@ -21,12 +21,20 @@ func (c cli) Run() {
 		Run:   c.addIndex,
 	}
 
+	var imagesCmd = &cobra.Command{
+		Use:   "images",
+		Short: "List container images",
+		Run:   c.listImages,
+	}
+
 	var rootCmd = &cobra.Command{
 		Use:   "cli-app",
 		Short: "A CLI application to manage Helm charts",
 	}
+
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(indexCmd)
+	rootCmd.AddCommand(imagesCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
