@@ -13,6 +13,7 @@ type adapter struct {
 
 type Adapter interface {
 	LocateChartInWebRepository(name, url string) (bool, error)
+	LocateChartInLocalRepository(name string, path string) (bool, error)
 }
 
 func NewAdapter() Adapter {
@@ -47,6 +48,28 @@ func (a *adapter) LocateChartInWebRepository(name, url string) (bool, error) {
 	if has {
 		fmt.Printf("Found chart %s in repo %s\n", name, url)
 		return true, nil
+	}
+
+	return false, nil
+}
+
+func (a *adapter) LocateChartInLocalRepository(name string, path string) (bool, error) {
+	fmt.Printf("Entering LocateChartInLocalRepository with name: %s and repository: %s\n", name, path)
+
+	indexFile, err := repo.LoadIndexFile(path + "/index.yaml")
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return false, err
+	}
+
+	fmt.Printf("indexFile: %v\n", indexFile)
+
+	has := indexFile.Has(name, "")
+	if has {
+		fmt.Printf("Found chart %s in repo %s\n", name, path)
+		return true, nil
+	} else {
+		fmt.Printf("Chart %s not found in repo %s\n", name, path)
 	}
 
 	return false, nil

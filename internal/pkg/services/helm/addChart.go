@@ -9,11 +9,21 @@ func (s *service) AddChart(name string) error {
 	var err error
 	repositoryList := s.storageAdapter.GetRepositoryList()
 
+	fmt.Printf("repositoryList: %v\n", repositoryList)
+
 	for _, repository := range repositoryList {
-		fmt.Println("Searching for chart in repo: ", repository)
-		found, err = s.helmAdapter.LocateChartInWebRepository(name, repository)
-		if err != nil {
-			return err
+		if repository.Local {
+			fmt.Println("Searching for chart in repo: ", repository)
+			found, err = s.helmAdapter.LocateChartInLocalRepository(name, repository.Location)
+			if err != nil {
+				return err
+			}
+		} else {
+			fmt.Println("Searching for chart in repo: ", repository)
+			found, err = s.helmAdapter.LocateChartInWebRepository(name, repository.Location)
+			if err != nil {
+				return err
+			}
 		}
 
 		if found {

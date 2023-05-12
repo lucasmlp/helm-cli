@@ -1,7 +1,9 @@
 package storage
 
+import serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
+
 type Adapter interface {
-	AddRepository(location string) error
+	AddRepository(repository serviceModels.HelmRepository) error
 	AddChart(name string) error
-	GetRepositoryList() []string
+	GetRepositoryList() []serviceModels.HelmRepository
 }
