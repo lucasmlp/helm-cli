@@ -18,7 +18,11 @@ func main() {
 
 	repositoryList := []string{helmRepository}
 
-	helmService := helmService.NewService(repositoryList, storageAdapter, helmAdapter)
+	helmService := helmService.NewService(storageAdapter, helmAdapter)
+
+	for _, repository := range repositoryList {
+		helmService.AddRepository(repository)
+	}
 
 	cli := cli.NewCLI(helmService)
 

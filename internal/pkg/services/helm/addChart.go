@@ -7,7 +7,9 @@ func (s *service) AddChart(name string) error {
 
 	var found bool
 	var err error
-	for _, repository := range s.repositoryList {
+	repositoryList := s.storageAdapter.GetRepositoryList()
+
+	for _, repository := range repositoryList {
 		fmt.Println("Searching for chart in repo: ", repository)
 		found, err = s.helmAdapter.LocateChartInWebRepository(name, repository)
 		if err != nil {
@@ -25,8 +27,10 @@ func (s *service) AddChart(name string) error {
 		return nil
 	}
 
-	// add chart info to local chart list and to storage
-	fmt.Println("Adding chart to local list and to storage")
+	err = s.storageAdapter.AddChart(name)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
