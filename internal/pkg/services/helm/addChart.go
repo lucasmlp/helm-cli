@@ -4,11 +4,29 @@ import "fmt"
 
 func (s *service) AddChart(name string) error {
 	fmt.Println("Entering AddChart with name: ", name)
-	for _, repo := range s.repositoryList {
-		//pull repo index and search for chart with name = name
-		fmt.Println("Searching for chart in repo: ", repo)
-		// add chart info to local chart list and to storage
-		fmt.Println("Adding chart to local list and to storage")
+
+	var found bool
+	var err error
+	for _, repository := range s.repositoryList {
+		fmt.Println("Searching for chart in repo: ", repository)
+		found, err = s.helmAdapter.LocateChartInWebRepository(name, repository)
+		if err != nil {
+			return err
+		}
+
+		if found {
+			fmt.Println("Found chart in repo: ", repository)
+			break
+		}
 	}
+
+	if !found {
+		fmt.Println("Chart not found in any repo")
+		return nil
+	}
+
+	// add chart info to local chart list and to storage
+	fmt.Println("Adding chart to local list and to storage")
+
 	return nil
 }

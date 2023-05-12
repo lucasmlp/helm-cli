@@ -1,9 +1,10 @@
 package main
 
 import (
+	helmAdapter "github.com/lucasmlp/helm-cli/internal/pkg/adapters/helm"
 	"github.com/lucasmlp/helm-cli/internal/pkg/adapters/storage"
 	"github.com/lucasmlp/helm-cli/internal/pkg/cli"
-	"github.com/lucasmlp/helm-cli/internal/pkg/services/helm"
+	helmService "github.com/lucasmlp/helm-cli/internal/pkg/services/helm"
 )
 
 const (
@@ -12,9 +13,12 @@ const (
 
 func main() {
 	storageAdapter := storage.NewAdapter()
+
+	helmAdapter := helmAdapter.NewAdapter()
+
 	repositoryList := []string{helmRepository}
 
-	helmService := helm.NewService(repositoryList, storageAdapter)
+	helmService := helmService.NewService(repositoryList, storageAdapter, helmAdapter)
 
 	cli := cli.NewCLI(helmService)
 
