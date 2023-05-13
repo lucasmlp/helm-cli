@@ -5,13 +5,16 @@ import (
 )
 
 type adapter struct {
-	storageAdapter storage.Adapter
+	storageAdapter      storage.Adapter
+	chartRepositoryPath string
 }
 
 func NewAdapter(
 	storageAdapter storage.Adapter,
+	chartRepositoryPath string,
 ) Adapter {
 	return &adapter{
-		storageAdapter: storageAdapter,
+		storageAdapter:      storageAdapter,
+		chartRepositoryPath: chartRepositoryPath,
 	}
 }

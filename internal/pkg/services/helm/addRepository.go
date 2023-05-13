@@ -12,12 +12,12 @@ func (s *service) AddRepository(repository models.HelmRepository) error {
 	fmt.Printf("Entering AddRepository in Helm service with location: %s\n", repository.Location)
 
 	if !repository.Local && s.isValidURL(repository.Location) {
-		if err := s.addRepository(repository); err != nil {
+		if err := s.addRepository(&repository); err != nil {
 			return err
 		}
 	} else if repository.Local && s.isValidLocalPath(repository.Location) {
 
-		if err := s.addRepository(repository); err != nil {
+		if err := s.addRepository(&repository); err != nil {
 			return err
 		}
 	}
@@ -42,7 +42,7 @@ func (s *service) isValidLocalPath(path string) bool {
 	return true
 }
 
-func (s *service) addRepository(repository models.HelmRepository) error {
+func (s *service) addRepository(repository *models.HelmRepository) error {
 	err := s.storageAdapter.AddRepository(repository)
 	if err != nil {
 		return err

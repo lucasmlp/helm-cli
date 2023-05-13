@@ -23,5 +23,7 @@ func (a *adapter) RetrieveLocalChart(name, path string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
-	return generateChartData(path, name, chartVersion)
+	chartCompletePath := path + "/" + name + "-" + chartVersion.Version + ".tgz"
+
+	return generateChartData(chartCompletePath, name, chartVersion)
 }

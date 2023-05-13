@@ -11,7 +11,10 @@ func (s *service) AddChart(name string) error {
 
 	var err error
 	var chart *models.HelmChart
-	repositoryList := s.storageAdapter.GetRepositoryList()
+	repositoryList, err := s.storageAdapter.GetRepositoryList()
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("repositoryList: %v\n", repositoryList)
 
@@ -29,6 +32,12 @@ func (s *service) AddChart(name string) error {
 				if err != nil {
 					return err
 				}
+
+				err = s.storageAdapter.AddChart(chart)
+				if err != nil {
+					return err
+				}
+				break
 			}
 		} else {
 			found, err := s.helmAdapter.LocateChartInWebRepository(name, repository.Location)
@@ -39,8 +48,16 @@ func (s *service) AddChart(name string) error {
 			if *found {
 				chart, err = s.helmAdapter.RetrieveRemoteChart(name, repository.Location)
 				if err != nil {
+					fmt.Println("Error retrieving chart: ", err)
 					return err
 				}
+
+				err = s.storageAdapter.AddChart(chart)
+				if err != nil {
+					fmt.Println("Error adding chart: ", err)
+					return err
+				}
+				break
 			}
 		}
 

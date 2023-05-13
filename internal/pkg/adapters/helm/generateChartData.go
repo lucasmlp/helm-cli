@@ -1,16 +1,18 @@
 package helm
 
 import (
+	"fmt"
+
 	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
 func generateChartData(path string, name string, chartVersion *repo.ChartVersion) (*serviceModels.HelmChart, error) {
-	chartCompletePath := path + "/" + name + "-" + chartVersion.Version + ".tgz"
 
-	chart, err := loader.Load(chartCompletePath)
+	chart, err := loader.Load(path)
 	if err != nil {
+		fmt.Println("Error loading chart: ", err)
 		return nil, err
 	}
 
@@ -31,7 +33,7 @@ func generateChartData(path string, name string, chartVersion *repo.ChartVersion
 		Name:        chartVersion.Name,
 		Version:     chartVersion.Version,
 		Description: chartVersion.Description,
-		Path:        chartCompletePath,
+		Path:        path,
 		Image:       containerImage,
 	}
 
