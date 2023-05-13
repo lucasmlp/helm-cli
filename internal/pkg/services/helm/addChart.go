@@ -63,10 +63,19 @@ func (s *service) AddChart(name string) error {
 
 		if chart != nil {
 			fmt.Println("Found chart in repo: ", repository)
-			err = s.storageAdapter.AddChart(chart)
+
+			storageChart, err := s.storageAdapter.GetChart(name)
 			if err != nil {
 				return err
 			}
+
+			if storageChart != nil {
+				err = s.storageAdapter.AddChart(chart)
+				if err != nil {
+					return err
+				}
+			}
+
 			return nil
 		}
 	}

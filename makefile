@@ -17,5 +17,6 @@ index:
 
 images:
 	@ rm -rf main
+	@ rm -rf index.yaml
 	@ go build ./cmd/main.go
 	@ ./main images

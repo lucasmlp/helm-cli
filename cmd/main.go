@@ -5,7 +5,6 @@ import (
 	"os"
 
 	helmAdapter "github.com/lucasmlp/helm-cli/internal/pkg/adapters/helm"
-	"github.com/lucasmlp/helm-cli/internal/pkg/adapters/storage"
 	mongoAdapter "github.com/lucasmlp/helm-cli/internal/pkg/adapters/storage/mongo"
 	"github.com/lucasmlp/helm-cli/internal/pkg/cli"
 	helmService "github.com/lucasmlp/helm-cli/internal/pkg/services/helm"
@@ -15,7 +14,7 @@ import (
 )
 
 const (
-	cartRepositoryPath = "./charts"
+	cartRepositoryPath = "/Users/lucas/development/helm-cli/charts"
 	fileMode           = 0755
 )
 
@@ -46,17 +45,11 @@ func main() {
 
 	mongoAdapter := mongoAdapter.NewAdapter(client, client.Database("helm-cli"))
 
-	storageAdapter := storage.NewAdapter()
-
-	helmAdapter := helmAdapter.NewAdapter(storageAdapter, "./charts")
+	helmAdapter := helmAdapter.NewAdapter(mongoAdapter, "/Users/lucas/development/helm-cli/charts")
 
 	// repositoryList := []serviceModels.HelmRepository{helmWebRepository, helmLocalRepository}
 
 	helmService := helmService.NewService(mongoAdapter, helmAdapter)
-
-	// for _, repository := range repositoryList {
-	// 	helmService.AddRepository(repository)
-	// }
 
 	cli := cli.NewCLI(helmService)
 
