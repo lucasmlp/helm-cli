@@ -5,4 +5,5 @@ type HelmChart struct {
 	Version     string
 	Description string
 	Path        string
+	Image       string
 }

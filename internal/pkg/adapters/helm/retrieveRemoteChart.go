@@ -1,6 +1,7 @@
 package helm
 
 import (
+	"fmt"
 	"log"
 
 	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
@@ -21,6 +22,8 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
+	fmt.Printf("chartVersion.URLs: %v\n", chartVersion.URLs)
+
 	actionConfiguration := new(action.Configuration)
 
 	settings := cli.New()
@@ -32,9 +35,11 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
+	destDir := "./charts"
+
 	pullClient := action.NewPullWithOpts(action.WithConfig(actionConfiguration))
 	pullClient.Settings = settings
-	pullClient.DestDir = "./charts"
+	pullClient.DestDir = destDir
 	pullClient.RepoURL = url
 	pullClient.Version = chartVersion.Version
 
@@ -45,12 +50,7 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
-	chartData := &serviceModels.HelmChart{
-		Name:        chartVersion.Name,
-		Version:     chartVersion.Version,
-		Description: chartVersion.Description,
-		Path:        "./charts" + "/" + name + "-" + chartVersion.Version + ".tgz",
-	}
+	chartCompletePath := destDir + "/" + name + "-" + chartVersion.Version + ".tgz"
 
-	return chartData, nil
+	return generateChartData(chartCompletePath, name, chartVersion)
 }

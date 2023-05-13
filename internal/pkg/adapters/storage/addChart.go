@@ -14,7 +14,7 @@ func (a *adapter) AddChart(chart *serviceModels.HelmChart) error {
 
 	fmt.Println("Chart added: ", chart.Name)
 
-	prettyChartList, err := PrettyStruct(a.chartList)
+	prettyChartList, err := prettyStruct(a.chartList)
 	if err != nil {
 		return err
 	}
@@ -24,7 +24,7 @@ func (a *adapter) AddChart(chart *serviceModels.HelmChart) error {
 	return nil
 }
 
-func PrettyStruct(data interface{}) (string, error) {
+func prettyStruct(data interface{}) (string, error) {
 	val, err := json.MarshalIndent(data, "", "    ")
 	if err != nil {
 		return "", err
