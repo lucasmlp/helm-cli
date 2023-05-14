@@ -1,14 +1,13 @@
 package helm
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
-func (a *adapter) GenerateIndexFile(path string) error {
+func (a *adapter) GenerateIndexFile() error {
 
 	index := repo.NewIndexFile()
 
@@ -18,22 +17,7 @@ func (a *adapter) GenerateIndexFile(path string) error {
 		return err
 	}
 
-	prettyChartList, err := prettyStruct(chartList)
-	if err != nil {
-		fmt.Println("Error pretty printing chart list")
-		return err
-	}
-
-	fmt.Println("Chart list: ", prettyChartList)
-
 	for _, c := range chartList {
-		prettyChart, err := prettyStruct(c)
-		if err != nil {
-			fmt.Println("Error pretty printing chart")
-			return err
-		}
-
-		fmt.Println("Chart: ", prettyChart)
 
 		chart, err := loader.Load(c.Path)
 		if err != nil {
@@ -56,12 +40,4 @@ func (a *adapter) GenerateIndexFile(path string) error {
 	}
 
 	return nil
-}
-
-func prettyStruct(data interface{}) (string, error) {
-	val, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return "", err
-	}
-	return string(val), nil
 }

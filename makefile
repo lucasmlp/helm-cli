@@ -6,12 +6,17 @@ GOPATH=$(shell go env GOPATH)
 add-repo-bitnami:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./helm-cli add repo bitnami https://charts.bitnami.com/bitnami
+	@ ./helm-cli repo-add bitnami https://charts.bitnami.com/bitnami
+
+add-repo-stable:
+	@ rm -rf helm-cli
+	@ go build -o helm-cli ./cmd/main.go
+	@ ./helm-cli repo-add stable https://charts.helm.sh/stable
 
 add-repo-local:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./helm-cli add repo localCharts '/Users/$(USER)/development/helm-charts'
+	@ ./helm-cli repo-add localCharts '/Users/$(USER)/development/helm-charts'
 
 add-k8s-api:
 	@ rm -rf helm-cli

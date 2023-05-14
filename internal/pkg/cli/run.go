@@ -9,14 +9,14 @@ import (
 func (c cli) Run() {
 
 	var addRepositoryCmd = &cobra.Command{
-		Use:   "add-repo [name] [path]",
+		Use:   "repo-add [name] [path]",
 		Short: "Add a local or remote Helm Repository",
 		Args:  cobra.ExactArgs(2),
 		Run:   c.addHelmRepository,
 	}
 
 	var addChartCmd = &cobra.Command{
-		Use:   "add-chart [chart name]",
+		Use:   "add [chart name]",
 		Short: "Add a Helm Chart",
 		Args:  cobra.ExactArgs(1),
 		Run:   c.addHelmChart,

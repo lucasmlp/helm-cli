@@ -5,7 +5,6 @@ import (
 )
 
 func (a *adapter) LocateChartInWebRepository(name, url string) (*bool, error) {
-	fmt.Printf("Entering LocateChartInWebRepository with name: %s and repository: %s\n", name, url)
 
 	indexFile, err := a.loadRemoteIndex(url)
 	if err != nil {
