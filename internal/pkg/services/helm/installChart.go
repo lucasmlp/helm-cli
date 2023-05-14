@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func (s *service) InstallChart(name string) error {
+func (s *service) InstallChart(name, releaseName string) error {
 	fmt.Println("Entering AddChart with name: ", name)
 
 	storageChart, err := s.storageAdapter.GetChart(name)
@@ -17,9 +17,7 @@ func (s *service) InstallChart(name string) error {
 		return errors.New("chart doesn't exist in storage")
 	}
 
-	releasename := ""
-
-	err = s.helmAdapter.InstallChart(releasename, name)
+	err = s.helmAdapter.InstallChart(releaseName, name)
 	if err != nil {
 		return err
 	}

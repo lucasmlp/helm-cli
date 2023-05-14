@@ -21,14 +21,14 @@ func (s *service) AddRepository(name, path string) error {
 		return errors.New("repository already exists")
 	}
 
-	if s.isValidURL(path) {
-		if err := s.addRepository(name, path, false); err != nil {
+	if s.isValidLocalPath(path) {
+		if err := s.addRepository(name, path, true); err != nil {
 			return err
 		}
 
 		return nil
-	} else if s.isValidLocalPath(path) {
-		if err := s.addRepository(name, path, true); err != nil {
+	} else if s.isValidURL(path) {
+		if err := s.addRepository(name, path, false); err != nil {
 			return err
 		}
 
@@ -42,7 +42,10 @@ func (s *service) isValidURL(uri string) bool {
 	fmt.Println("Validating URL", uri)
 
 	_, err := url.ParseRequestURI(uri)
-	fmt.Printf("Error validating URL: %v\n", err)
+	if err != nil {
+		fmt.Printf("Error parsing URL: %v\n", err)
+		return false
+	}
 
 	return err == nil
 }

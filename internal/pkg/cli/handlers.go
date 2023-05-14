@@ -7,8 +7,8 @@ import (
 )
 
 func (c cli) addHelmRepository(cmd *cobra.Command, args []string) {
-	name := args[0]
-	path := args[1]
+	name := args[1]
+	path := args[2]
 	err := c.helmService.AddRepository(name, path)
 	if err != nil {
 		log.Fatal(err)
@@ -24,8 +24,9 @@ func (c cli) addHelmChart(cmd *cobra.Command, args []string) {
 }
 
 func (c cli) installChart(cmd *cobra.Command, args []string) {
-	chartName := args[0]
-	err := c.helmService.InstallChart(chartName)
+	chartName := args[1]
+	releaseName := args[2]
+	err := c.helmService.InstallChart(chartName, releaseName)
 	if err != nil {
 		log.Fatal(err)
 	}

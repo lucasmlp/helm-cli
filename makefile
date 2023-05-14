@@ -6,9 +6,14 @@ GOPATH=$(shell go env GOPATH)
 add-repo-bitnami:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./helm-cli add-repo bitnami https://charts.bitnami.com/bitnami
+	@ ./helm-cli add repo bitnami https://charts.bitnami.com/bitnami
 
-add-local:
+add-repo-local:
+	@ rm -rf helm-cli
+	@ go build -o helm-cli ./cmd/main.go
+	@ ./helm-cli add repo localCharts '/Users/$(USER)/development/helm-charts'
+
+add-k8s-api:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
 	@ ./helm-cli add k8s-api
@@ -36,9 +41,9 @@ build:
 install-mysql:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./helm-cli install mysql
+	@ ./helm-cli install chart mysql mysql-dev
 
 install-k8s-api:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./helm-cli install k8s-api
+	@ ./helm-cli install chart k8s-api k8s-api-dev
