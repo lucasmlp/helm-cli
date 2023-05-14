@@ -4,26 +4,36 @@ export $(shell sed 's/=.*//' .env)
 GOPATH=$(shell go env GOPATH)
 
 add-local:
-	@ rm -rf main
+	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./main add k8s-api
+	@ ./helm-cli add k8s-api
 
-add-web:
-	@ rm -rf main
+add-ark:
+	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./main add ark
+	@ ./helm-cli add ark
 
 index:
-	@ rm -rf main
+	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./main index
+	@ ./helm-cli index
 
 images:
-	@ rm -rf main
+	@ rm -rf helm-cli
 	@ rm -rf index.yaml
 	@ go build -o helm-cli ./cmd/main.go
-	@ ./main images
+	@ ./helm-cli images
 
 build:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
+
+install-ark:
+	@ rm -rf helm-cli
+	@ go build -o helm-cli ./cmd/main.go
+	@ ./helm-cli install ark
+
+install-k8s-api:
+	@ rm -rf helm-cli
+	@ go build -o helm-cli ./cmd/main.go
+	@ ./helm-cli install k8s-api

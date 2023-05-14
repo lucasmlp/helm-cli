@@ -22,6 +22,14 @@ func (c cli) addHelmChart(cmd *cobra.Command, args []string) {
 	}
 }
 
+func (c cli) installChart(cmd *cobra.Command, args []string) {
+	chartName := args[0]
+	err := c.helmService.InstallChart(chartName)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (c cli) addIndex(cmd *cobra.Command, args []string) {
 	c.helmService.AddIndex()
 }

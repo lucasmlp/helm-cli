@@ -22,6 +22,12 @@ func (c cli) Run() {
 		Run:   c.addHelmChart,
 	}
 
+	var installCmd = &cobra.Command{
+		Use:   "install [chart name]",
+		Short: "Installs a helm chart",
+		Run:   c.installChart,
+	}
+
 	var indexCmd = &cobra.Command{
 		Use:   "index",
 		Short: "Add a Helm repository index",
@@ -41,6 +47,7 @@ func (c cli) Run() {
 
 	rootCmd.AddCommand(addRepositoryCmd)
 	rootCmd.AddCommand(addChartCmd)
+	rootCmd.AddCommand(installCmd)
 	rootCmd.AddCommand(indexCmd)
 	rootCmd.AddCommand(imagesCmd)
 
