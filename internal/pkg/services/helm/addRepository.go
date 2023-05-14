@@ -9,34 +9,41 @@ import (
 	"github.com/lucasmlp/helm-cli/internal/pkg/services/models"
 )
 
-func (s *service) AddRepository(path string) error {
-	fmt.Printf("Entering AddRepository in Helm service with location: %s\n", path)
+func (s *service) AddRepository(name, path string) error {
+	fmt.Printf("Entering AddRepository in helm service with name: %s and path: %s\n", name, path)
+
+	repository, err := s.storageAdapter.GetRepository(name)
+	if err != nil && err.Error() != "mongo: no documents in result" {
+		return err
+	}
+
+	if repository != nil {
+		return errors.New("repository already exists")
+	}
 
 	if s.isValidURL(path) {
-		repository := models.HelmRepository{
-			Location: path,
-			Local:    false,
-		}
-
-		if err := s.addRepository(&repository); err != nil {
+		if err := s.addRepository(name, path, false); err != nil {
 			return err
 		}
+
+		return nil
 	} else if s.isValidLocalPath(path) {
-		repository := models.HelmRepository{
-			Location: path,
-			Local:    true,
-		}
-
-		if err := s.addRepository(&repository); err != nil {
+		if err := s.addRepository(name, path, true); err != nil {
 			return err
 		}
+
+		return nil
 	}
 
 	return errors.New("invalid repository location")
 }
 
 func (s *service) isValidURL(uri string) bool {
+	fmt.Println("Validating URL", uri)
+
 	_, err := url.ParseRequestURI(uri)
+	fmt.Printf("Error validating URL: %v\n", err)
+
 	return err == nil
 }
 
@@ -52,8 +59,16 @@ func (s *service) isValidLocalPath(path string) bool {
 	return true
 }
 
-func (s *service) addRepository(repository *models.HelmRepository) error {
-	err := s.storageAdapter.AddRepository(repository)
+func (s *service) addRepository(name, path string, local bool) error {
+	fmt.Printf("Adding repository with name: %s, path: %s and local: %v\n", name, path, local)
+
+	repository := models.HelmRepository{
+		Name:     name,
+		Location: path,
+		Local:    local,
+	}
+
+	err := s.storageAdapter.AddRepository(&repository)
 	if err != nil {
 		return err
 	}

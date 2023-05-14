@@ -10,4 +10,5 @@ type Adapter interface {
 	GetRepositoryList() ([]*serviceModels.HelmRepository, error)
 	GetChart(name string) (*serviceModels.HelmChart, error)
 	GetChartList() ([]*serviceModels.HelmChart, error)
+	GetRepository(name string) (*serviceModels.HelmRepository, error)
 }

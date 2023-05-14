@@ -55,6 +55,27 @@ func (s *service) AddChart(name string) error {
 				break
 			}
 		} else {
+			// standardRepositoryLocation := "./charts"
+			// found, err := s.helmAdapter.LocateChartInLocalRepository(name, standardRepositoryLocation)
+			// if err != nil {
+			// 	return err
+			// }
+
+			// if *found {
+			// 	chart, err = s.helmAdapter.RetrieveLocalChart(name, standardRepositoryLocation)
+			// 	if err != nil {
+			// 		return err
+			// 	}
+			// 	fmt.Println("Found chart in repo: ", standardRepositoryLocation)
+
+			// 	err = s.storageAdapter.AddChart(chart)
+			// 	if err != nil {
+			// 		return err
+			// 	}
+
+			// 	break
+			// }
+
 			found, err := s.helmAdapter.LocateChartInWebRepository(name, repository.Location)
 			if err != nil {
 				return err

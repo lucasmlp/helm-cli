@@ -15,6 +15,7 @@ func (a *adapter) loadRemoteIndex(url string) (*repo.IndexFile, error) {
 		Name: url,
 		URL:  url,
 	}, getter.All(settings))
+
 	if err != nil {
 		fmt.Println("Failed to create chart repository")
 		fmt.Println(err)

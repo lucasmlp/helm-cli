@@ -9,10 +9,6 @@ import (
 )
 
 func (a *adapter) GenerateIndexFile(path string) error {
-	// index, err := repo.IndexDirectory(path, "")
-	// if err != nil {
-	// 	return err
-	// }
 
 	index := repo.NewIndexFile()
 

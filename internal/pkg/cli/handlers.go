@@ -7,8 +7,9 @@ import (
 )
 
 func (c cli) addHelmRepository(cmd *cobra.Command, args []string) {
-	path := args[0]
-	err := c.helmService.AddRepository(path)
+	name := args[0]
+	path := args[1]
+	err := c.helmService.AddRepository(name, path)
 	if err != nil {
 		log.Fatal(err)
 	}

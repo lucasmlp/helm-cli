@@ -9,9 +9,9 @@ import (
 func (c cli) Run() {
 
 	var addRepositoryCmd = &cobra.Command{
-		Use:   "add-repository [repository path]",
+		Use:   "add-repo [name] [path]",
 		Short: "Add a local or remote Helm Repository",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		Run:   c.addHelmRepository,
 	}
 
