@@ -8,8 +8,6 @@ import (
 )
 
 func (a *adapter) AddChart(chart *serviceModels.HelmChart) error {
-	fmt.Println("Entering mongo AddChart with name: ", chart.Name)
-
 	db := a.client.Database("helm-cli")
 	collection := db.Collection("charts")
 

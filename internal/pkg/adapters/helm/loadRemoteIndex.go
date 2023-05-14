@@ -22,6 +22,8 @@ func (a *adapter) loadRemoteIndex(url string) (*repo.IndexFile, error) {
 		return nil, err
 	}
 
+	repository.Config.InsecureSkipTLSverify = true
+
 	indexFilePath, err := repository.DownloadIndexFile()
 	if err != nil {
 		fmt.Println("Failed to download index file")

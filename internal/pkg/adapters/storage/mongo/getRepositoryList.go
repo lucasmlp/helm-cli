@@ -2,15 +2,12 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 
 	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (a *adapter) GetRepositoryList() ([]*serviceModels.HelmRepository, error) {
-	fmt.Println("Entering GetRepositoryList")
-
 	db := a.client.Database("helm-cli")
 	collection := db.Collection("repositories")
 

@@ -22,7 +22,7 @@ cd helm-cli
 4. Build the Helm CLI binary:
 
 ```shell
-go build -o helm-cli
+go build ./cmd/main -o helm-cli
 ```
 
 5. Optionally, move the binary to a directory on your system's `PATH` to make it accessible globally.
@@ -40,26 +40,26 @@ The Helm CLI provides the following commands:
 To run the Helm CLI, execute the `cli-app` command followed by the desired subcommand. For example:
 
 ```shell
-cli-app add repo my-repo https://my-repo-url
+helm-cli add repo my-repo https://my-repo-url
 ```
 
 ```shell
-cli-app add my-chart
+helm-cli add my-chart
 ```
 
 ```shell
-cli-app install chart my-chart-name
+helm-cli install chart my-chart-name
 ```
 
 ```shell
-cli-app index
+helm-cli index
 ```
 
 ```shell
-cli-app images
+helm-cli images
 ```
 
-Note: Replace `cli-app` with the appropriate command or binary name when running the Helm CLI.
+Note: Replace `helm-cli` with the appropriate command or binary name when running the Helm CLI.
 
 For more information on each command and its usage, you can also run the `--help` flag or refer to the source code in the `run.go` file.
 

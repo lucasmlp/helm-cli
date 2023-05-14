@@ -9,8 +9,6 @@ import (
 )
 
 func (a *adapter) UpdateChart(chart *serviceModels.HelmChart) error {
-	fmt.Println("Entering UpdateChart with name: ", chart.Name)
-
 	db := a.client.Database("helm-cli")
 	collection := db.Collection("charts")
 

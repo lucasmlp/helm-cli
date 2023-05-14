@@ -6,7 +6,7 @@ import (
 )
 
 func (s *service) InstallChart(name, releaseName string) error {
-	fmt.Println("Entering AddChart with name: ", name)
+	fmt.Println("Installing chart with name ", name, " and release name ", releaseName)
 
 	storageChart, err := s.storageAdapter.GetChart(name)
 	if err != nil {

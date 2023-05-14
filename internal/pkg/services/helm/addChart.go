@@ -8,7 +8,7 @@ import (
 )
 
 func (s *service) AddChart(name string) error {
-	fmt.Println("Entering AddChart with name: ", name)
+	fmt.Println("Adding chart: ", name)
 
 	var err error
 	var chart *models.HelmChart
@@ -17,8 +17,6 @@ func (s *service) AddChart(name string) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf("storageChart: %v\n", storageChart)
 
 	if storageChart != nil {
 		return errors.New("chart already exists in storage")
@@ -29,10 +27,8 @@ func (s *service) AddChart(name string) error {
 		return err
 	}
 
-	fmt.Printf("repositoryList: %v\n", repositoryList)
-
 	for _, repository := range repositoryList {
-		fmt.Println("Searching for chart in repo: ", repository)
+		fmt.Println("Searching for chart in repo: ", repository.Name)
 
 		if repository.Local {
 			found, err := s.helmAdapter.LocateChartInLocalRepository(name, repository.Location)
@@ -45,37 +41,16 @@ func (s *service) AddChart(name string) error {
 				if err != nil {
 					return err
 				}
-				fmt.Println("Found chart in repo: ", repository)
+				fmt.Println("Found chart in repo: ", repository.Name)
 
 				err = s.storageAdapter.AddChart(chart)
 				if err != nil {
 					return err
 				}
 
-				break
+				return nil
 			}
 		} else {
-			// standardRepositoryLocation := "./charts"
-			// found, err := s.helmAdapter.LocateChartInLocalRepository(name, standardRepositoryLocation)
-			// if err != nil {
-			// 	return err
-			// }
-
-			// if *found {
-			// 	chart, err = s.helmAdapter.RetrieveLocalChart(name, standardRepositoryLocation)
-			// 	if err != nil {
-			// 		return err
-			// 	}
-			// 	fmt.Println("Found chart in repo: ", standardRepositoryLocation)
-
-			// 	err = s.storageAdapter.AddChart(chart)
-			// 	if err != nil {
-			// 		return err
-			// 	}
-
-			// 	break
-			// }
-
 			found, err := s.helmAdapter.LocateChartInWebRepository(name, repository.Location)
 			if err != nil {
 				return err
@@ -88,16 +63,17 @@ func (s *service) AddChart(name string) error {
 					return err
 				}
 
-				fmt.Println("Found chart in repo: ", repository)
+				fmt.Println("Found chart in repo: ", repository.Name)
 
 				err = s.storageAdapter.AddChart(chart)
 				if err != nil {
 					return err
 				}
-				break
+
+				return nil
 			}
 		}
 	}
 
-	return nil
+	return errors.New("chart not found in any repository")
 }

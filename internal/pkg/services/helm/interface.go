@@ -5,5 +5,5 @@ type Service interface {
 	AddRepository(name, path string) error
 	InstallChart(name, releaseName string) error
 	AddIndex() error
-	ListContainerImages() (*[]string, error)
+	ListContainerImages() ([]*string, error)
 }

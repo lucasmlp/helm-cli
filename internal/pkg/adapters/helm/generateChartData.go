@@ -16,16 +16,26 @@ func generateChartData(path string, name string, chartVersion *repo.ChartVersion
 		return nil, err
 	}
 
-	image := chart.Values["image"].(map[string]interface{})
-	imageRepository := image["repository"]
-	imageTag := image["tag"]
-
 	var containerImage string
-	if image != nil && imageRepository != nil {
-		if imageTag != nil {
-			containerImage = imageRepository.(string) + ":" + imageTag.(string)
-		} else {
-			containerImage = imageRepository.(string)
+
+	switch chart.Values["image"].(type) {
+	case string:
+
+		containerImage = chart.Values["image"].(string)
+
+	case map[string]interface{}:
+
+		image := chart.Values["image"].(map[string]interface{})
+		imageRepository := image["repository"]
+		imageTag := image["tag"]
+
+		if image != nil {
+			if imageRepository != nil && imageRepository.(string) != "" {
+				containerImage = imageRepository.(string)
+				if imageTag != nil && imageTag.(string) != "" {
+					containerImage += ":" + imageTag.(string)
+				}
+			}
 		}
 	}
 

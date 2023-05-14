@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -10,8 +9,6 @@ import (
 )
 
 func (a *adapter) GetChartList() ([]*serviceModels.HelmChart, error) {
-	fmt.Println("Entering GetChartList")
-
 	db := a.client.Database("helm-cli")
 	collection := db.Collection("charts")
 

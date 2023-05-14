@@ -1,7 +1,6 @@
 package helm
 
 import (
-	"fmt"
 	"log"
 
 	serviceModels "github.com/lucasmlp/helm-cli/internal/pkg/services/models"
@@ -22,8 +21,6 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
-	fmt.Printf("chartVersion.URLs: %v\n", chartVersion.URLs)
-
 	actionConfiguration := new(action.Configuration)
 
 	settings := cli.New()
@@ -40,6 +37,7 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 	pullClient.DestDir = a.chartRepositoryPath
 	pullClient.RepoURL = url
 	pullClient.Version = chartVersion.Version
+	pullClient.InsecureSkipTLSverify = true
 
 	_, err = pullClient.Run(name)
 	if err != nil {
