@@ -3,8 +3,6 @@ package helm
 import (
 	"errors"
 	"fmt"
-	"math/rand"
-	"time"
 )
 
 func (s *service) InstallChart(name string) error {
@@ -19,10 +17,7 @@ func (s *service) InstallChart(name string) error {
 		return errors.New("chart doesn't exist in storage")
 	}
 
-	var seededRand = rand.New(
-		rand.NewSource(time.Now().UnixNano()))
-
-	releasename := storageChart.Name + fmt.Sprintf("%v", seededRand.Int())
+	releasename := ""
 
 	err = s.helmAdapter.InstallChart(releasename, name)
 	if err != nil {

@@ -37,7 +37,7 @@ func (a adapter) InstallChart(releaseName, name string) error {
 
 	client := action.NewInstall(actionConfiguration)
 
-	client.ReleaseName = releaseName
+	client.GenerateName = true
 
 	_, err = client.Run(validatedChart, nil)
 	if err != nil {
