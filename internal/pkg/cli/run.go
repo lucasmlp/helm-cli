@@ -8,7 +8,14 @@ import (
 
 func (c cli) Run() {
 
-	var addCmd = &cobra.Command{
+	var addRepositoryCmd = &cobra.Command{
+		Use:   "add-repository [repository path]",
+		Short: "Add a local or remote Helm Repository",
+		Args:  cobra.ExactArgs(1),
+		Run:   c.addHelmRepository,
+	}
+
+	var addChartCmd = &cobra.Command{
 		Use:   "add [chart name]",
 		Short: "Add a Helm Chart",
 		Args:  cobra.ExactArgs(1),
@@ -32,7 +39,8 @@ func (c cli) Run() {
 		Short: "A CLI application to manage Helm charts",
 	}
 
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(addRepositoryCmd)
+	rootCmd.AddCommand(addChartCmd)
 	rootCmd.AddCommand(indexCmd)
 	rootCmd.AddCommand(imagesCmd)
 

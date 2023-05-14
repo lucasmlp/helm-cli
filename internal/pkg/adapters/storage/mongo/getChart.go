@@ -17,6 +17,9 @@ func (a *adapter) GetChart(name string) (*models.HelmChart, error) {
 	var chart *models.HelmChart
 	err := collection.FindOne(context.Background(), bson.M{"name": name}).Decode(&chart)
 	if err != nil {
+		if err.Error() == "mongo: no documents in result" {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return chart, nil

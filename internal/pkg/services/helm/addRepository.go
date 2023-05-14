@@ -1,6 +1,7 @@
 package helm
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -8,21 +9,30 @@ import (
 	"github.com/lucasmlp/helm-cli/internal/pkg/services/models"
 )
 
-func (s *service) AddRepository(repository models.HelmRepository) error {
-	fmt.Printf("Entering AddRepository in Helm service with location: %s\n", repository.Location)
+func (s *service) AddRepository(path string) error {
+	fmt.Printf("Entering AddRepository in Helm service with location: %s\n", path)
 
-	if !repository.Local && s.isValidURL(repository.Location) {
+	if s.isValidURL(path) {
+		repository := models.HelmRepository{
+			Location: path,
+			Local:    false,
+		}
+
 		if err := s.addRepository(&repository); err != nil {
 			return err
 		}
-	} else if repository.Local && s.isValidLocalPath(repository.Location) {
+	} else if s.isValidLocalPath(path) {
+		repository := models.HelmRepository{
+			Location: path,
+			Local:    true,
+		}
 
 		if err := s.addRepository(&repository); err != nil {
 			return err
 		}
 	}
 
-	return nil
+	return errors.New("invalid repository location")
 }
 
 func (s *service) isValidURL(uri string) bool {

@@ -6,9 +6,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func (c cli) addHelmRepository(cmd *cobra.Command, args []string) {
+	path := args[0]
+	err := c.helmService.AddRepository(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (c cli) addHelmChart(cmd *cobra.Command, args []string) {
 	chartName := args[0]
-	c.helmService.AddChart(chartName)
+	err := c.helmService.AddChart(chartName)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (c cli) addIndex(cmd *cobra.Command, args []string) {
