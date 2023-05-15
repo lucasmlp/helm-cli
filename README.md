@@ -16,6 +16,9 @@ The adapter packages are injected into the service packages via dependency injec
 
 The layers are bound to each other by contracts, the interface.go files. They can easily be injected with another implementation that satisfies those contracts.
 
+## Unit tests
+
+I've written unit tests to all methods in the service package. and got 100% coverage in all of them but the add repoitory. To cover 100% of that package I would have had to wrap the os and url packages in the adapter packages so as to be able to create mocks for it.
 ## Installation
 
 To install and use the Helm CLI, follow these steps:
