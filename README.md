@@ -40,9 +40,9 @@ The Helm CLI provides the following commands:
 
 - `repo-add [name] [path]`: Add a local or remote Helm repository.
 - `add [chart name]`: Add a Helm chart. The application looks into the registered repositories for the chart. If it is found in the remote repository, the application downloads to a /charts folder.
-- `install [chart name]`: Install a Helm chart.
-- `index`: Add a Helm repository index.
-- `images`: List container images.
+- `install [chart name] [release name]`: Install a Helm chart.
+- `index`: Add a Helm repository index in the current directory.
+- `images`: List container images in all charts added.
 
 To run the Helm CLI, execute the `helm-cli` command followed by the desired subcommand. For example:
 
