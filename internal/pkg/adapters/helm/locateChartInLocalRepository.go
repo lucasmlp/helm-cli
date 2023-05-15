@@ -7,7 +7,6 @@ import (
 )
 
 func (a *adapter) LocateChartInLocalRepository(name string, path string) (*bool, error) {
-	fmt.Printf("Entering LocateChartInLocalRepository with name: %s and repository: %s\n", name, path)
 
 	indexFile, err := repo.LoadIndexFile(path + "/index.yaml")
 	if err != nil {
