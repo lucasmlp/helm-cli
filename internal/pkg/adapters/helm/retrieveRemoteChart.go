@@ -36,6 +36,7 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 	pullClient.Settings = settings
 	pullClient.DestDir = a.chartRepositoryPath
 	pullClient.RepoURL = url
+	pullClient.Untar = true
 	pullClient.Version = chartVersion.Version
 	pullClient.InsecureSkipTLSverify = true
 
@@ -46,7 +47,7 @@ func (a *adapter) RetrieveRemoteChart(name, url string) (*serviceModels.HelmChar
 		return nil, err
 	}
 
-	chartCompletePath := a.chartRepositoryPath + "/" + name + "-" + chartVersion.Version + ".tgz"
+	chartCompletePath := a.chartRepositoryPath + "/" + name
 
 	return generateChartData(chartCompletePath, name, chartVersion)
 }

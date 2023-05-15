@@ -10,8 +10,6 @@ import (
 )
 
 func (a adapter) InstallChart(releaseName, name string) error {
-	opName := "InstallChart"
-	log.Printf("entering %v", opName)
 
 	storageChart, err := a.storageAdapter.GetChart(name)
 	if err != nil {
@@ -50,8 +48,6 @@ func (a adapter) InstallChart(releaseName, name string) error {
 }
 
 func loadAndValidate(chartPath string) (*chart.Chart, error) {
-	opName := "loadAndValidate"
-	log.Printf("entering %v", opName)
 
 	chart, err := loader.Load(chartPath)
 	if err != nil {
