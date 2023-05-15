@@ -14,7 +14,7 @@ func (s *service) AddRepository(name, path string) error {
 
 	repository, err := s.storageAdapter.GetRepository(name)
 	if err != nil && err.Error() != "mongo: no documents in result" {
-		return err
+		return errors.New("failed while retrieving repository")
 	}
 
 	if repository != nil {
