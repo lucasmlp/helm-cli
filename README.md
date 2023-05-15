@@ -2,6 +2,12 @@
 
 This repository contains a command-line interface (CLI) tool called Helm CLI. The Helm CLI is a utility for interacting with Helm, the package manager for Kubernetes.
 
+## Considerations about the requirements
+
+1. Storing a list of helm charts internally in the application won't work. The reason forthat is that this application is a CLI application. It has a short lifecycle and only runs when a command is received. This way, an internal list wouldn't last for more than one lifecycle.
+
+2. I've added a command to add the repositories to the application. This way, it's not necessary to hardcode the path of the repositories.
+
 ## Architecture
 The CLI is composed of three layers. The presentation layer (package CLI), service layer (package service) and adapter layer(package adapter). The business rules are contained in the service layer. The adapter layer is responsible to conect the application with external services and databases.
 
@@ -155,6 +161,8 @@ kubectl exec -t -i terminal-pod -- /bin/bash
 ```shell
 ./helm-cli images
 ```
+
+## Improvements
 
 ## Contributing
 

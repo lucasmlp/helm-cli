@@ -42,7 +42,7 @@ func (c cli) Run() {
 	}
 
 	var rootCmd = &cobra.Command{
-		Use:   "cli-app",
+		Use:   "helm-cli",
 		Short: "A CLI application to manage Helm charts",
 	}
 
