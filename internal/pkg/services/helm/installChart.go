@@ -10,7 +10,7 @@ func (s *service) InstallChart(name, releaseName string) error {
 
 	storageChart, err := s.storageAdapter.GetChart(name)
 	if err != nil {
-		return err
+		return errors.New("failed while retrieving chart")
 	}
 
 	if storageChart == nil {
@@ -19,7 +19,7 @@ func (s *service) InstallChart(name, releaseName string) error {
 
 	err = s.helmAdapter.InstallChart(releaseName, name)
 	if err != nil {
-		return err
+		return errors.New("failed while installing chart")
 	}
 
 	return nil
