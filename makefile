@@ -52,3 +52,16 @@ install-k8s-api:
 	@ rm -rf helm-cli
 	@ go build -o helm-cli ./cmd/main.go
 	@ ./helm-cli install chart k8s-api k8s-api-dev
+
+mock:
+	@ echo
+	@ echo "Starting building mocks..."
+	@ echo
+	@ mockgen -source=internal/pkg/adapters/storage/interface.go -destination=internal/pkg/adapters/storage/mocks/adapter_mock.go -package=mocks
+	@ mockgen -source=internal/pkg/adapters/helm/interface.go -destination=internal/pkg/adapters/helm/mocks/adapter_mock.go -package=mocks
+
+test:
+	@ echo
+	@ echo "Starting running tests..."
+	@ echo
+	@ go clean -testcache & go test -cover ./...

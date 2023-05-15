@@ -3,7 +3,9 @@ module github.com/lucasmlp/helm-cli
 go 1.19
 
 require (
+	github.com/golang/mock v1.6.0
 	github.com/spf13/cobra v1.7.0
+	github.com/stretchr/testify v1.8.2
 	go.mongodb.org/mongo-driver v1.11.6
 	helm.sh/helm/v3 v3.12.0
 )
@@ -89,6 +91,7 @@ require (
 	github.com/opencontainers/image-spec v1.1.0-rc2.0.20221005185240-3a7f492d3f1b // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
