@@ -18,7 +18,7 @@ The layers are bound to each other by contracts, the interface.go files. They ca
 
 ## Unit tests
 
-I've written unit tests to all methods in the service package. and got 100% coverage in all of them but the add repoitory. To cover 100% of that package I would have had to wrap the os and url packages in the adapter packages so as to be able to create mocks for it.
+I've written unit tests to all methods in the service package and got 100% coverage in all of them but the add repoitory. To cover 100% of that package I would have had to wrap the os and url packages in the adapter packages so as to be able to create mocks for it.
 ## Installation
 
 To install and use the Helm CLI, follow these steps:
@@ -50,7 +50,7 @@ The Helm CLI provides the following commands:
 
 - `repo-add [name] [path]`: Add a local or remote Helm repository.
 - `add [chart name]`: Add a Helm chart. The application looks into the registered repositories for the chart. If it is found in the remote repository, the application downloads it to a /charts folder.
-- `install [chart name] [release name]`: Install a Helm chart.
+- `install [chart name] [release name]`: Installs a Helm chart. If it's a local chart, unpack it and edit the valus.yml before running the install command. If it's a remote chart, the add command pulled the chart and unpacked it into the ./charts folder. Edit the values.yml before running the install command.
 - `index`: Add a Helm repository index in the current directory.
 - `images`: List container images in all charts added.
 
