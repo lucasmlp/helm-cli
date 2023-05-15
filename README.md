@@ -1,19 +1,20 @@
 # Helm CLI
 
-This repository contains a command-line interface (CLI) tool called Helm CLI. The Helm CLI is a utility for interacting with Helm, the package manager for Kubernetes.
+This repository contains a command-line interface (CLI) tool known as Helm CLI. The Helm CLI is a utility for interacting with Helm, the package manager for Kubernetes.
 
-## Considerations about the requirements
+## Considerations About the Requirements
 
-1. Storing a list of helm charts internally in the application won't work. The reason forthat is that this application is a CLI application. It has a short lifecycle and only runs when a command is received. This way, an internal list wouldn't last for more than one lifecycle.
+1. Storing a list of Helm charts internally in the application won't work. The reason for this is that this application is a CLI application. It has a short lifecycle and only runs when a command is received. In this way, an internal list wouldn't last for more than one lifecycle.
 
 2. I've added a command to add the repositories to the application. This way, it's not necessary to hardcode the path of the repositories.
 
 ## Architecture
-The CLI is composed of three layers. The presentation layer (package CLI), service layer (package service) and adapter layer(package adapter). The business rules are contained in the service layer. The adapter layer is responsible to conect the application with external services and databases.
 
-The adapter packages are injected into the service packages via dependency injection. The same thing happens with the service packages and the cli package. They are injected into the CLI package via dependency injection. The whole injection process happens in main.go.
+The CLI is composed of three layers: the presentation layer (package CLI), service layer (package service), and adapter layer (package adapter). The business rules are contained in the service layer and the adapter layer is responsible for connecting the application with external services and databases.
 
-The layers are bound to each other by contracts, the interface.go files. They can be easily be injected with another implementation that satisfies those contracts.
+The adapter packages are injected into the service packages via dependency injection. The same thing happens with the service packages and the CLI package; they are injected into the CLI package via dependency injection. The whole injection process happens in main.go.
+
+The layers are bound to each other by contracts, the interface.go files. They can easily be injected with another implementation that satisfies those contracts.
 
 ## Installation
 
@@ -45,7 +46,7 @@ go build -o helm-cli ./cmd/main.go
 The Helm CLI provides the following commands:
 
 - `repo-add [name] [path]`: Add a local or remote Helm repository.
-- `add [chart name]`: Add a Helm chart. The application looks into the registered repositories for the chart. If it is found in the remote repository, the application downloads to a /charts folder.
+- `add [chart name]`: Add a Helm chart. The application looks into the registered repositories for the chart. If it is found in the remote repository, the application downloads it to a /charts folder.
 - `install [chart name] [release name]`: Install a Helm chart.
 - `index`: Add a Helm repository index in the current directory.
 - `images`: List container images in all charts added.
@@ -53,7 +54,7 @@ The Helm CLI provides the following commands:
 To run the Helm CLI, execute the `helm-cli` command followed by the desired subcommand. For example:
 
 ```shell
-helm-cli add repo my-repo https://my-repo-url
+helm-cli repo-add my-repo https://my-repo-url
 ```
 
 ```shell
@@ -61,7 +62,7 @@ helm-cli add my-chart
 ```
 
 ```shell
-helm-cli install chart my-chart-name
+helm-cli install my-chart my-release
 ```
 
 ```shell
@@ -78,26 +79,25 @@ For more information on each command and its usage, you can also run the `--help
 
 ## Testing
 
-I've provided a testing folder that contains scripts and Kubernetes manifests to make it easy to validate the application.
+I've provided a testing folder that contains scripts and Kubernetes manifests to facilitate validation of the application.
 
 ### Manifests
-1. mongodb.yml: spins up a simple mongodb deployment and service without authentication
-2. pod.yml: spins up an ubuntu pod that'll be used for testing the application. It also contains a service account, cluster role and cluster role binding. The cluster role has full access to the cluster and this is not a good thing to do. The permission depends on which resources the helm chart installation will generate.
+1. `mongodb.yml`: Spins up a simple MongoDB deployment and service without authentication.
+2. `pod.yml`: Spins up an Ubuntu pod to be used for testing the application. It also contains a service account, cluster role, and cluster role binding. The cluster role has full access to the cluster, which is not recommended. The permission depends on which resources the Helm chart installation will generate.
 
-### Shell scripts
-1. copy-binary.sh: this script copies the go binary into the home folder of the pod used for testing.
-2. copy-local-charts.sh: this script copies a folder containing local helm charts to the local-charts folder in the home path of the testing pod.
+### Shell Scripts
+1. `copy-binary.sh`: This script copies the Go binary into the home folder of the pod used for testing.
+2. `copy-local-charts.sh`: This script copies a folder containing local Helm charts to the local-charts folder in the home path of the testing pod.
 
-
-### Testing instructions
-1. Spin up the testing pod and mongodb by applying the manifests provided in the testing folder.
+### Testing Instructions
+1. Spin up the testing pod and MongoDB by applying the manifests provided in the testing folder.
 
 ```shell
 kubectl apply -f ./testing/manifests/pod.yml
 kubectl apply -f ./testing/manifests/mongodb.yml
 ```
 
-2. Generate a binary compatible with linux platform
+2. Generate a binary compatible with the Linux platform:
 ```shell
 make build
 ```
@@ -122,59 +122,53 @@ chmod +x ./testing/scripts/copy-local-charts.sh
 kubectl exec -t -i terminal-pod -- /bin/bash
 ```
 
-6. Add a local helm repository
+6. Add a local Helm repository:
+
 ```shell
 ./helm-cli repo-add local ./local-charts
 ```
 
-7. Add a remote helm repository
+7. Add a remote Helm repository:
+
 ```shell
 ./helm-cli repo-add bitnami https://charts.bitnami.com/bitnami
 ```
 
-8. Add a local chart
+8. Add a local chart:
+
 ```shell
 ./helm-cli add <name of your chart>
 ```
 
-9. Add a remote chart
+9. Add a remote chart:
+
 ```shell
 ./helm-cli add mysql
 ```
 
-10. Installing a remote chart
+10. Install a remote chart:
+
 ```shell
 ./helm-cli install mysql mysql-dev
 ```
 
-11. Installing a local chart
+11. Install a local chart:
+
 ```shell
 ./helm-cli install <chart name> <release name>
 ```
 
-12. Generating an index with all charts added
+12. Generate an index with all charts added:
+
 ```shell
 ./helm-cli index
 ```
 
-13. Printing all container images used in all charts that were added
+13. Print all container images used in all charts that were added:
+
 ```shell
 ./helm-cli images
 ```
-
-## Improvements
-
-## Contributing
-
-Contributions to the Helm CLI project are welcome! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository on GitHub.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes, ensuring that you follow the project's coding standards.
-4. Write tests for your changes, if applicable.
-5. Commit your changes with clear and descriptive commit messages.
-6. Push your changes to your forked repository.
-7. Submit a pull request to the main repository, explaining the changes you've made.
 
 ## License
 
