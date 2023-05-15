@@ -23,7 +23,7 @@ func (c cli) Run() {
 	}
 
 	var installCmd = &cobra.Command{
-		Use:   "install chart [chart name] [release name]",
+		Use:   "install [chart name] [release name]",
 		Short: "Installs a helm chart",
 		Args:  cobra.ExactArgs(2),
 		Run:   c.installChart,
