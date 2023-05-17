@@ -10,9 +10,6 @@ import (
 func (s *service) AddChart(name string) error {
 	fmt.Println("Adding chart: ", name)
 
-	var err error
-	var chart *models.HelmChart
-
 	storageChart, err := s.storageAdapter.GetChart(name)
 	if err != nil {
 		return errors.New("failed while retrieving chart")
@@ -31,49 +28,78 @@ func (s *service) AddChart(name string) error {
 		fmt.Println("Searching for chart in repo: ", repository.Name)
 
 		if repository.Local {
-			found, err := s.helmAdapter.LocateChartInLocalRepository(name, repository.Location)
+			chartAdded, err := s.findLocalChartAndAdd(name, repository)
 			if err != nil {
-				return errors.New("failed while locating chart in local repository")
+				return err
 			}
 
-			if *found {
-				chart, err = s.helmAdapter.RetrieveLocalChart(name, repository.Location)
-				if err != nil {
-					return errors.New("failed while retrieving local chart")
-				}
-				fmt.Println("Found chart in repo: ", repository.Name)
-
-				err = s.storageAdapter.AddChart(chart)
-				if err != nil {
-					return errors.New("failed while adding chart to storage")
-				}
-
+			if *chartAdded {
 				return nil
 			}
+
 		} else {
-			found, err := s.helmAdapter.LocateChartInWebRepository(name, repository.Location)
+			chartAdded, err := s.findRemoteChartAndAdd(name, repository)
 			if err != nil {
-				return errors.New("failed while locating chart in web repository")
+				return err
 			}
 
-			if *found {
-				chart, err = s.helmAdapter.RetrieveRemoteChart(name, repository.Location)
-				if err != nil {
-					fmt.Println("Error retrieving chart: ", err)
-					return errors.New("failed while retrieving remote chart")
-				}
-
-				fmt.Println("Found chart in repo: ", repository.Name)
-
-				err = s.storageAdapter.AddChart(chart)
-				if err != nil {
-					return errors.New("failed while adding chart to storage")
-				}
-
+			if *chartAdded {
 				return nil
 			}
 		}
 	}
 
 	return errors.New("chart not found in any repository")
+}
+
+func (s *service) findLocalChartAndAdd(name string, localRepository *models.HelmRepository) (*bool, error) {
+
+	found, err := s.helmAdapter.LocateChartInLocalRepository(name, localRepository.Location)
+	if err != nil {
+		return nil, errors.New("failed while locating chart in local repository")
+	}
+
+	chartAdded := false
+	if *found {
+		chart, err := s.helmAdapter.RetrieveLocalChart(name, localRepository.Location)
+		if err != nil {
+			return nil, errors.New("failed while retrieving local chart")
+		}
+		fmt.Println("Found chart in repo: ", localRepository.Name)
+
+		err = s.storageAdapter.AddChart(chart)
+		if err != nil {
+			return nil, errors.New("failed while adding chart to storage")
+		}
+
+		chartAdded = true
+	}
+
+	return &chartAdded, nil
+}
+
+func (s *service) findRemoteChartAndAdd(name string, remoteRepository *models.HelmRepository) (*bool, error) {
+	found, err := s.helmAdapter.LocateChartInWebRepository(name, remoteRepository.Location)
+	if err != nil {
+		return nil, errors.New("failed while locating chart in remote repository")
+	}
+
+	chartAdded := false
+	if *found {
+		chart, err := s.helmAdapter.RetrieveRemoteChart(name, remoteRepository.Location)
+		if err != nil {
+			fmt.Println("Error retrieving chart: ", err)
+			return nil, errors.New("failed while retrieving remote chart")
+		}
+
+		fmt.Println("Found chart in repo: ", remoteRepository.Name)
+
+		err = s.storageAdapter.AddChart(chart)
+		if err != nil {
+			return nil, errors.New("failed while adding chart to storage")
+		}
+
+		chartAdded = true
+	}
+	return &chartAdded, nil
 }

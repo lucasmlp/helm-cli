@@ -2,9 +2,9 @@ package helm
 
 import (
 	"context"
-	"testing"
-
 	"errors"
+	"fmt"
+	"testing"
 
 	"github.com/golang/mock/gomock"
 	helmMocks "github.com/lucasmlp/helm-cli/internal/pkg/adapters/helm/mocks"
@@ -138,7 +138,7 @@ func Test_AddChart_Failures(t *testing.T) {
 				},
 			},
 			{
-				name:           "Failed while adding chart to storage",
+				name:           "Failed while adding local chart to storage",
 				expectedResult: errors.New("failed while adding chart to storage"),
 				helmAdapterMock: func(context.Context, *gomock.Controller) *helmMocks.MockAdapter {
 					helmAdapterMock := helmMocks.NewMockAdapter(ctrl)
@@ -159,8 +159,8 @@ func Test_AddChart_Failures(t *testing.T) {
 				},
 			},
 			{
-				name:           "Failed while locating chart in web repository",
-				expectedResult: errors.New("failed while locating chart in web repository"),
+				name:           "Failed while locating chart in remote repository",
+				expectedResult: errors.New("failed while locating chart in remote repository"),
 				helmAdapterMock: func(context.Context, *gomock.Controller) *helmMocks.MockAdapter {
 					helmAdapterMock := helmMocks.NewMockAdapter(ctrl)
 					localChartFound := false
@@ -179,7 +179,7 @@ func Test_AddChart_Failures(t *testing.T) {
 				},
 			},
 			{
-				name:           "Failed while retrieving web chart",
+				name:           "Failed while retrieving remote chart",
 				expectedResult: errors.New("failed while retrieving remote chart"),
 				helmAdapterMock: func(context.Context, *gomock.Controller) *helmMocks.MockAdapter {
 					helmAdapterMock := helmMocks.NewMockAdapter(ctrl)
@@ -201,7 +201,7 @@ func Test_AddChart_Failures(t *testing.T) {
 				},
 			},
 			{
-				name:           "Failed while adding chart to storage",
+				name:           "Failed while adding remote chart to storage",
 				expectedResult: errors.New("failed while adding chart to storage"),
 				helmAdapterMock: func(context.Context, *gomock.Controller) *helmMocks.MockAdapter {
 					helmAdapterMock := helmMocks.NewMockAdapter(ctrl)
@@ -231,7 +231,9 @@ func Test_AddChart_Failures(t *testing.T) {
 
 				service := NewService(tc.storageAdapterMock(ctx, ctrl), tc.helmAdapterMock(ctx, ctrl))
 
-				err := service.AddChart("")
+				fmt.Println("Running test: ", tc.name)
+
+				err := service.AddChart("chart-name")
 				if err == nil {
 					t.Fatalf("Should have failed by '%s', got nothing", tc.expectedResult.Error())
 				}
@@ -330,6 +332,8 @@ func Test_AddChart_Successes(t *testing.T) {
 				ctrl := gomock.NewController(t)
 
 				service := NewService(tc.storageAdapterMock(ctx, ctrl), tc.helmAdapterMock(ctx, ctrl))
+
+				fmt.Println("Running test: ", tc.name)
 
 				err := service.AddChart("test")
 
